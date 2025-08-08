@@ -77,11 +77,13 @@ const resources = {
       }
     }
   }
-};
+} as const;
+
+const savedLng = localStorage.getItem('clear.lng') || 'en';
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'en',
+  lng: savedLng,
   fallbackLng: 'en',
   interpolation: { escapeValue: false }
 });
@@ -90,3 +92,8 @@ export const useI18n = () => {
   const { t } = useTranslation();
   return t;
 };
+
+export function setLanguage(lng: 'en' | 'hi') {
+  i18n.changeLanguage(lng);
+  localStorage.setItem('clear.lng', lng);
+}

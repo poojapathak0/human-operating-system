@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
+import { setLanguage } from '../utils/i18n';
 
 export default function App() {
   const { pathname } = useLocation();
@@ -20,6 +21,7 @@ export default function App() {
           <Link to="/compass" className={pathname === '/compass' ? 'active' : ''}>Compass</Link>
           <Link to="/vault" className={pathname === '/vault' ? 'active' : ''}>Vault</Link>
           <Link to="/settings" className={pathname === '/settings' ? 'active' : ''}>Settings</Link>
+          <button className="micBtn" onClick={() => setLanguage((localStorage.getItem('clear.lng') || 'en') === 'en' ? 'hi' : 'en')}>🌐</button>
         </nav>
       </header>
       <main>

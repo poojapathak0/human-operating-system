@@ -22,8 +22,9 @@ export async function deriveKeyFromPassphrase(passphrase: string): Promise<Crypt
     false,
     ['deriveKey']
   );
+  const saltBuf = new Uint8Array(salt); // ensure ArrayBuffer (not SharedArrayBuffer)
   const key = await crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: 120_000, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: saltBuf, iterations: 120_000, hash: 'SHA-256' },
     baseKey,
     { name: 'AES-GCM', length: 256 },
     false,
