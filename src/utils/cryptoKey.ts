@@ -3,6 +3,7 @@
 
 const SALT_KEY = 'clear.salt.v1';
 let derivedKey: CryptoKey | null = null;
+const SESSION_PW_KEY = 'clear.session.passphrase';
 
 function getOrCreateSalt(): Uint8Array {
   const existing = localStorage.getItem(SALT_KEY);
@@ -52,6 +53,26 @@ export function getKeyOrNull(): CryptoKey | null {
 export async function setPassphrase(passphrase: string): Promise<void> {
   // Creating salt if needed and deriving the session key.
   derivedKey = await deriveKeyFromPassphrase(passphrase);
+}
+
+export function setSessionPassphrase(passphrase: string | null) {
+  if (passphrase) sessionStorage.setItem(SESSION_PW_KEY, passphrase);
+  else sessionStorage.removeItem(SESSION_PW_KEY);
+}
+
+export function getSessionPassphrase(): string | null {
+  return sessionStorage.getItem(SESSION_PW_KEY);
+}
+
+export async function autoUnlockFromSession(): Promise<boolean> {
+  const pw = getSessionPassphrase();
+  if (!pw) return false;
+  try {
+    await unlock(pw);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function encryptString(plain: string, key?: CryptoKey | null): Promise<string> {

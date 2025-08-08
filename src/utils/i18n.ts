@@ -77,6 +77,44 @@ const resources = {
       }
     }
   }
+  ,
+  es: {
+    translation: {
+      common: { save: 'Guardar' },
+      mood: {
+        sad: 'Triste',
+        tired: 'Cansado',
+        neutral: 'Neutral',
+        calm: 'Calmo',
+        happy: 'Feliz'
+      },
+      checkin: {
+        title: 'Chequeo Diario de Claridad',
+        how_are_you: '¿Cómo te sientes?',
+        top_priority: '¿Tu prioridad de hoy?',
+        note_placeholder: 'Escribe una nota corta…'
+      },
+      timeline: { title: 'Línea de Reflexión de Vida' },
+      compass: {
+        title: 'Brújula de Decisiones',
+        question: '¿Qué decisión estás explorando?',
+        values: 'Valores (separados por comas)',
+        values_ph: 'p. ej., honestidad, familia, crecimiento',
+        options: 'Opciones (una por línea)',
+        options_ph: 'Lista opciones posibles…'
+      },
+      vault: {
+        title: 'Bóveda Interior',
+        placeholder: 'Entrada de diario privada…',
+        unlock: 'Desbloquear con contraseña',
+        lock: 'Bloquear',
+        unlocked: 'Desbloqueado',
+        enter_passphrase: 'Ingresa tu contraseña',
+        locked: 'Bloqueado — desbloquea para ver',
+        loading: 'Descifrando…'
+      }
+    }
+  }
 } as const;
 
 const savedLng = localStorage.getItem('clear.lng') || 'en';
@@ -93,7 +131,7 @@ export const useI18n = () => {
   return t;
 };
 
-export function setLanguage(lng: 'en' | 'hi') {
+export function setLanguage(lng: 'en' | 'hi' | 'es') {
   i18n.changeLanguage(lng);
   localStorage.setItem('clear.lng', lng);
 }

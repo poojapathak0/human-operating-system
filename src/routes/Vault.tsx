@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
+import type { JournalEntry } from '../store/appStore';
 import { useI18n } from '../utils/i18n';
 import { hasKey, unlock, lock } from '../utils/cryptoKey';
 
 export default function Vault() {
   const t = useI18n();
-  const { addJournal, journals, getDecryptedJournalText } = useAppStore((s) => ({
-    addJournal: s.addJournal,
-    journals: s.journals,
-    getDecryptedJournalText: s.getDecryptedJournalText
-  }));
+  const addJournal = useAppStore((s) => s.addJournal);
+  const journals = useAppStore((s) => s.journals);
+  const getDecryptedJournalText = useAppStore((s) => s.getDecryptedJournalText);
   const [text, setText] = useState('');
   const [unlocked, setUnlocked] = useState(hasKey());
   const [plainTexts, setPlainTexts] = useState<Record<string, string>>({});
+  const [allowInsightRead, setAllowInsightRead] = useState(localStorage.getItem('clear.allowInsightRead') === '1');
 
   useEffect(() => {
     if (!unlocked) return;
@@ -73,11 +73,21 @@ export default function Vault() {
         </button>
       </div>
 
+      <div className="card" style={{display:'flex', alignItems:'center', gap:8}}>
+        <input
+          id="allow-insights"
+          type="checkbox"
+          checked={allowInsightRead}
+          onChange={(e)=>{ const v = e.target.checked; setAllowInsightRead(v); localStorage.setItem('clear.allowInsightRead', v?'1':'0'); }}
+        />
+        <label htmlFor="allow-insights">Allow local insights to temporarily read decrypted entries (memory only)</label>
+      </div>
+
       <ul className="list">
         {journals
           .slice()
-          .sort((a, b) => b.createdAt - a.createdAt)
-          .map((j) => (
+          .sort((a: JournalEntry, b: JournalEntry) => b.createdAt - a.createdAt)
+          .map((j: JournalEntry) => (
             <li key={j.id} className="card">
               <div className="row">
                 <small>{new Date(j.createdAt).toLocaleString()}</small>

@@ -43,13 +43,15 @@ export default function CheckIn() {
       <div className="card">
         <label>{t('checkin.how_are_you')}</label>
         <div className="moodRow">
-          {['sad', 'tired', 'neutral', 'calm', 'happy'].map((m) => (
+      {['sad', 'tired', 'neutral', 'calm', 'happy'].map((m) => (
             <button
               key={m}
-              className={mood === m ? 'mood active' : 'mood'}
+        className={mood === m ? 'mood active' : 'mood'}
+        data-m={m}
               onClick={() => setMood(m)}
             >
-              {t(`mood.${m}`)}
+        <span className="emo">{m==='sad'?'😔':m==='tired'?'😪':m==='neutral'?'😐':m==='calm'?'😌':'😊'}</span>
+        {t(`mood.${m}`)}
             </button>
           ))}
         </div>
