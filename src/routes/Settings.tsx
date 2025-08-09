@@ -12,7 +12,6 @@ export default function Settings() {
   const [highContrast, setHighContrast] = useState(localStorage.getItem('clear.hc') === '1');
   const [reduceMotion, setReduceMotion] = useState(localStorage.getItem('clear.rm') === '1');
   const [dark, setDark] = useState(localStorage.getItem('clear.theme') === 'dark');
-  const [palette, setPalette] = useState<string>(localStorage.getItem('clear.palette') || 'ocean');
   const [speech, setSpeech] = useState(localStorage.getItem('clear.speech') === '1');
   const [showPassModal, setShowPassModal] = useState<'set' | 'unlock' | null>(null);
   const passRef = useRef<HTMLInputElement>(null);
@@ -32,9 +31,6 @@ export default function Settings() {
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : '';
   }, [dark]);
-  useEffect(() => {
-    document.documentElement.dataset.palette = palette || '';
-  }, [palette]);
 
   function strengthHint(pw: string) {
     let score = 0;
@@ -62,166 +58,357 @@ export default function Settings() {
   async function onExportFile() {
     try {
       const blobTxt = await exportEncryptedWithKey();
-      const blob = new Blob([blobTxt], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'clear-backup.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e: any) {
-      alert(e.message || 'Export failed');
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([blobTxt], { type: 'text/plain' }));
+      link.download = `clear-backup-${new Date().toISOString().split('T')[0]}.txt`;
+      link.click();
+    } catch (err) {
+      alert('Export failed: ' + err);
     }
   }
   async function onImportFile(file: File) {
-    const text = await file.text();
-    await importEncryptedWithKey(text.trim());
-    alert('Imported successfully');
+    try {
+      const txt = await file.text();
+      await importEncryptedWithKey(txt);
+      window.location.reload();
+    } catch (err) {
+      alert('Import failed: ' + err);
+    }
   }
 
   return (
-    <section>
-      <h2>Settings</h2>
-      <div className="card" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-        <button onClick={() => setShowPassModal('set')}>Set/Change Passphrase</button>
-        {unlocked ? (
-          <button onClick={onLock}>Lock</button>
-        ) : (
-          <button onClick={() => setShowPassModal('unlock')}>Unlock</button>
-        )}
-        <button onClick={onExportFile} disabled={!unlocked}>Export Encrypted Backup</button>
-        <input ref={fileRef} type="file" accept=".txt" style={{ display: 'none' }} onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) onImportFile(f);
-        }} />
-        <button onClick={() => fileRef.current?.click()} disabled={!unlocked}>Import Encrypted Backup</button>
+    <section className="section-premium">
+      <div className="header-premium">
+        <div style={{
+          fontSize: '2.5rem',
+          marginBottom: 'var(--space-sm)',
+          filter: 'drop-shadow(0 2px 8px var(--brand-500))'
+        }}>
+          ⚙️
+        </div>
+        <div style={{
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          background: 'var(--brand-gradient)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: 'var(--space-sm)'
+        }}>
+          Settings
+        </div>
+        <div style={{
+          color: 'var(--text-secondary)',
+          fontSize: '1rem',
+          maxWidth: '500px',
+          textAlign: 'center'
+        }}>
+          Customize your experience and manage your security
+        </div>
       </div>
 
-      <div className="card" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-        <label>Language</label>
-        <select
-          value={lang}
-          onChange={(e) => {
-            const v = (e.target.value as 'en' | 'hi' | 'es');
-            setLang(v);
-            setLanguage(v);
-          }}
-        >
-          <option value="en">English</option>
-          <option value="hi">हिन्दी</option>
-          <option value="es">Español</option>
-        </select>
-
-        <label style={{ marginLeft: 16 }}>Large Text</label>
-        <input
-          type="checkbox"
-          checked={largeText}
-          onChange={(e) => {
-            const v = e.target.checked;
-            setLargeText(v);
-            localStorage.setItem('clear.textLg', v ? '1' : '0');
-          }}
-        />
-
-        <label style={{ marginLeft: 16 }}>High Contrast</label>
-        <input
-          type="checkbox"
-          checked={highContrast}
-          onChange={(e) => {
-            const v = e.target.checked;
-            setHighContrast(v);
-            localStorage.setItem('clear.hc', v ? '1' : '0');
-          }}
-        />
-
-        <label style={{ marginLeft: 16 }}>Reduce Motion</label>
-        <input
-          type="checkbox"
-          checked={reduceMotion}
-          onChange={(e) => {
-            const v = e.target.checked;
-            setReduceMotion(v);
-            localStorage.setItem('clear.rm', v ? '1' : '0');
-          }}
-        />
-
-        <label style={{ marginLeft: 16 }}>Dark Mode</label>
-        <input
-          type="checkbox"
-          checked={dark}
-          onChange={(e) => {
-            const v = e.target.checked;
-            setDark(v);
-            localStorage.setItem('clear.theme', v ? 'dark' : 'light');
-          }}
-        />
-
-        <label style={{ marginLeft: 16 }}>Theme</label>
-        <select
-          value={palette}
-          onChange={(e)=>{ const v = e.target.value; setPalette(v); localStorage.setItem('clear.palette', v); }}
-        >
-          <option value="ocean">Ocean</option>
-          <option value="forest">Forest</option>
-          <option value="sunset">Sunset</option>
-          <option value="lavender">Lavender</option>
-        </select>
-
-        <label style={{ marginLeft: 16 }}>Voice Input</label>
-        <input
-          type="checkbox"
-          checked={speech}
-          onChange={(e) => {
-            const v = e.target.checked;
-            setSpeech(v);
-            localStorage.setItem('clear.speech', v ? '1' : '0');
-          }}
-        />
+      <div className="card card-premium">
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          marginBottom: 'var(--space-lg)',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-sm)'
+        }}>
+          🔐 Security & Backup
+        </h3>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: 'var(--space-md)',
+          marginBottom: 'var(--space-lg)'
+        }}>
+          <button 
+            className="btn btn-primary"
+            onClick={() => setShowPassModal('set')}
+            style={{ background: 'var(--brand-gradient)' }}
+          >
+            Set/Change Passphrase
+          </button>
+          {unlocked ? (
+            <button 
+              className="btn btn-secondary"
+              onClick={onLock}
+              style={{ background: 'var(--surface-glass)' }}
+            >
+              🔒 Lock
+            </button>
+          ) : (
+            <button 
+              className="btn btn-primary"
+              onClick={() => setShowPassModal('unlock')}
+              style={{ background: 'var(--brand-gradient)' }}
+            >
+              🔓 Unlock
+            </button>
+          )}
+          <button 
+            className="btn btn-secondary"
+            onClick={onExportFile} 
+            disabled={!unlocked}
+            style={{ 
+              background: unlocked ? 'var(--surface-glass)' : 'var(--surface-disabled)',
+              opacity: unlocked ? 1 : 0.5
+            }}
+          >
+            📤 Export Backup
+          </button>
+          <input ref={fileRef} type="file" accept=".txt" style={{ display: 'none' }} onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) onImportFile(f);
+          }} />
+          <button 
+            className="btn btn-secondary"
+            onClick={() => fileRef.current?.click()} 
+            disabled={!unlocked}
+            style={{ 
+              background: unlocked ? 'var(--surface-glass)' : 'var(--surface-disabled)',
+              opacity: unlocked ? 1 : 0.5
+            }}
+          >
+            📥 Import Backup
+          </button>
+        </div>
       </div>
 
-      <div className="card">
-        <h3>Crisis resources</h3>
-        <p>If you’re in immediate danger or thinking about harming yourself, please contact local emergency services. Resources:</p>
-        <ul>
-          <li><a href="https://findahelpline.com" target="_blank" rel="noreferrer">findahelpline.com</a></li>
-          <li>US: 988 Suicide & Crisis Lifeline</li>
-          <li>India: AASRA +91-9820466726</li>
-          <li><a href="/safety">More resources & grounding</a></li>
-        </ul>
+      <div className="card card-premium">
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          marginBottom: 'var(--space-lg)',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-sm)'
+        }}>
+          🌐 Language & Accessibility
+        </h3>
+        
+        <div className="settings-grid">
+          <div className="setting-item">
+            <label className="label-premium">🌍 Language</label>
+            <select
+              className="input-premium"
+              value={lang}
+              onChange={(e) => {
+                const v = (e.target.value as 'en' | 'hi' | 'es');
+                setLang(v);
+                setLanguage(v);
+              }}
+              style={{ background: 'var(--surface-glass)' }}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="large-text"
+              type="checkbox"
+              checked={largeText}
+              onChange={(e) => {
+                const v = e.target.checked;
+                setLargeText(v);
+                localStorage.setItem('clear.textLg', v ? '1' : '0');
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="large-text" className="toggle-label">
+              <span>📏 Large Text</span>
+              <small>Increases font size for better readability</small>
+            </label>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="high-contrast"
+              type="checkbox"
+              checked={highContrast}
+              onChange={(e) => {
+                const v = e.target.checked;
+                setHighContrast(v);
+                localStorage.setItem('clear.hc', v ? '1' : '0');
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="high-contrast" className="toggle-label">
+              <span>🎨 High Contrast</span>
+              <small>Improves visibility with stronger contrast</small>
+            </label>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="reduce-motion"
+              type="checkbox"
+              checked={reduceMotion}
+              onChange={(e) => {
+                const v = e.target.checked;
+                setReduceMotion(v);
+                localStorage.setItem('clear.rm', v ? '1' : '0');
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="reduce-motion" className="toggle-label">
+              <span>🧘 Reduce Motion</span>
+              <small>Minimizes animations for comfort</small>
+            </label>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="dark-mode"
+              type="checkbox"
+              checked={dark}
+              onChange={(e) => {
+                const v = e.target.checked;
+                setDark(v);
+                localStorage.setItem('clear.theme', v ? 'dark' : 'light');
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="dark-mode" className="toggle-label">
+              <span>🌙 Dark Mode</span>
+              <small>Easy on the eyes in low light</small>
+            </label>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="voice-input"
+              type="checkbox"
+              checked={speech}
+              onChange={(e) => {
+                const v = e.target.checked;
+                setSpeech(v);
+                localStorage.setItem('clear.speech', v ? '1' : '0');
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="voice-input" className="toggle-label">
+              <span>🎤 Voice Input</span>
+              <small>Speak instead of typing</small>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="card card-premium">
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          marginBottom: 'var(--space-md)',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-sm)'
+        }}>
+          🆘 Crisis Resources
+        </h3>
+        <div style={{
+          padding: 'var(--space-lg)',
+          background: 'var(--warning-100)',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--warning-300)',
+          marginBottom: 'var(--space-md)'
+        }}>
+          <p style={{ 
+            color: 'var(--warning-800)', 
+            fontWeight: '600',
+            marginBottom: 'var(--space-md)'
+          }}>
+            If you're in immediate danger or thinking about harming yourself, please contact local emergency services.
+          </p>
+          <div style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+            <a 
+              href="https://findahelpline.com" 
+              target="_blank" 
+              rel="noreferrer"
+              style={{
+                color: 'var(--brand-600)',
+                textDecoration: 'none',
+                fontWeight: '600',
+                padding: 'var(--space-sm)',
+                background: 'var(--surface-glass)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-glass)'
+              }}
+            >
+              🌐 findahelpline.com
+            </a>
+            <div style={{ color: 'var(--warning-700)', fontWeight: '500' }}>
+              📞 US: 988 Suicide & Crisis Lifeline
+            </div>
+            <div style={{ color: 'var(--warning-700)', fontWeight: '500' }}>
+              📞 India: AASRA +91-9820466726
+            </div>
+            <a 
+              href="/safety"
+              style={{
+                color: 'var(--brand-600)',
+                textDecoration: 'none',
+                fontWeight: '600',
+                padding: 'var(--space-sm)',
+                background: 'var(--surface-glass)',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-glass)',
+                display: 'inline-block',
+                marginTop: 'var(--space-sm)'
+              }}
+            >
+              🛡️ More resources & grounding techniques
+            </a>
+          </div>
+        </div>
       </div>
 
       <Modal title={showPassModal === 'set' ? 'Set/Change Passphrase' : 'Unlock'} open={!!showPassModal} onClose={() => setShowPassModal(null)}
         actions={
           <>
             <button onClick={() => setShowPassModal(null)}>Cancel</button>
-            <button onClick={async () => {
-              const v = passRef.current?.value || '';
-              const remember = !!rememberRef.current?.checked;
+            <button onClick={() => {
+              const pass = passRef.current?.value || '';
+              const remember = rememberRef.current?.checked || false;
               if (showPassModal === 'set') {
-                const c = passConfirmRef.current?.value || '';
-                if (v !== c) { alert('Passphrases do not match'); return; }
-                await onSetPassphrase(v, remember);
+                const confirm = passConfirmRef.current?.value || '';
+                if (pass !== confirm) {
+                  alert('Passphrases do not match.');
+                  return;
+                }
+                onSetPassphrase(pass, remember);
               } else {
-                await onUnlock(v, remember);
+                onUnlock(pass, remember);
               }
               setShowPassModal(null);
-            }}>Confirm</button>
+            }}>
+              {showPassModal === 'set' ? 'Set' : 'Unlock'}
+            </button>
           </>
         }
       >
-        <div style={{ display: 'grid', gap: 8 }}>
-          <input ref={passRef} type="password" placeholder="Enter passphrase" style={{ width: '100%' }} />
-          {showPassModal === 'set' && (
-            <>
-              <input ref={passConfirmRef} type="password" placeholder="Confirm passphrase" style={{ width: '100%' }} />
-              <small>Strength: {strengthHint(passRef.current?.value || '')}</small>
-            </>
-          )}
-          <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input ref={rememberRef} type="checkbox" /> Remember until tab is closed
-          </label>
-          {showPassModal === 'set' && <small>Remember your passphrase. There is no recovery.</small>}
-        </div>
+        <label>Passphrase</label>
+        <input ref={passRef} type="password" style={{ marginBottom: 8 }} />
+        {showPassModal === 'set' && (
+          <>
+            <label>Confirm Passphrase</label>
+            <input ref={passConfirmRef} type="password" style={{ marginBottom: 8 }} />
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              Strength: <span style={{ fontWeight: '600' }}>{strengthHint(passRef.current?.value || '')}</span>
+            </p>
+          </>
+        )}
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+          <input ref={rememberRef} type="checkbox" />
+          Remember this session
+        </label>
       </Modal>
     </section>
   );

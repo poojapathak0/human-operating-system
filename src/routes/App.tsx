@@ -25,14 +25,12 @@ export default function App() {
     document.documentElement.dataset.rm = rm ? '1' : '0';
   const theme = localStorage.getItem('clear.theme');
   document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : '';
-  const pal = localStorage.getItem('clear.palette') || 'ocean';
-  document.documentElement.dataset.palette = pal;
   }, []);
 
   return (
     <div className="container">
       <header className="appHeader">
-        <h1 className="brandGrad">Clear</h1>
+        <h1>Clear</h1>
         <nav>
           <Link to="/" className={pathname === '/' ? 'active' : ''}>Check-In</Link>
           <Link to="/timeline" className={pathname === '/timeline' ? 'active' : ''}>Timeline</Link>
