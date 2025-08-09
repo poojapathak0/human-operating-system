@@ -9,7 +9,10 @@
     "preview": "vite preview --port 5173",
     "test": "vitest --run",
     "lint": "eslint src --ext .ts,.tsx",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy:netlify": "npm run build && npx netlify deploy --prod --dir=dist",
+    "deploy:vercel": "npm run build && npx vercel --prod",
+    "deploy:gh-pages": "npm run build && npx gh-pages -d dist"
   },
   "dependencies": {
     "dexie": "^4.0.8",

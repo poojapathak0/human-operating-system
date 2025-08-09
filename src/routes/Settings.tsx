@@ -13,6 +13,7 @@ export default function Settings() {
   const [reduceMotion, setReduceMotion] = useState(localStorage.getItem('clear.rm') === '1');
   const [dark, setDark] = useState(localStorage.getItem('clear.theme') === 'dark');
   const [speech, setSpeech] = useState(localStorage.getItem('clear.speech') === '1');
+  const [notifications, setNotifications] = useState(localStorage.getItem('clear.notifications') === '1');
   const [showPassModal, setShowPassModal] = useState<'set' | 'unlock' | null>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const passConfirmRef = useRef<HTMLInputElement>(null);
@@ -297,6 +298,85 @@ export default function Settings() {
               <span>🎤 Voice Input</span>
               <small>Speak instead of typing</small>
             </label>
+          </div>
+
+          <div className="setting-toggle">
+            <input
+              id="notifications"
+              type="checkbox"
+              checked={notifications}
+              onChange={async (e) => {
+                const v = e.target.checked;
+                if (v) {
+                  // Request permission when enabling
+                  if ('Notification' in window) {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                      setNotifications(true);
+                      localStorage.setItem('clear.notifications', '1');
+                      // Start reminder service
+                      const { reminderService } = await import('../utils/reminders');
+                      reminderService.startIntelligentReminders();
+                    } else {
+                      alert('Notifications permission denied. Please enable in browser settings.');
+                    }
+                  } else {
+                    alert('This browser does not support notifications.');
+                  }
+                } else {
+                  setNotifications(false);
+                  localStorage.setItem('clear.notifications', '0');
+                }
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="notifications" className="toggle-label">
+              <span>🔔 Smart Reminders</span>
+              <small>Gentle nudges for check-ins and wellness milestones</small>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="card card-premium">
+        <h3 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          marginBottom: 'var(--space-lg)',
+          color: 'var(--text-primary)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-sm)'
+        }}>
+          📊 Tracking & Insights
+        </h3>
+        <div style={{
+          padding: 'var(--space-lg)',
+          background: 'var(--info-100)',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--info-300)',
+          marginBottom: 'var(--space-md)'
+        }}>
+          <h4 style={{ color: 'var(--info-800)', marginBottom: 'var(--space-md)' }}>
+            📈 What Clear Tracks for You:
+          </h4>
+          <div style={{ display: 'grid', gap: 'var(--space-sm)', color: 'var(--info-700)' }}>
+            <div>🔥 <strong>Daily Streaks:</strong> Consecutive check-in days</div>
+            <div>📊 <strong>Mood Patterns:</strong> 7-day averages and trends</div>
+            <div>🎯 <strong>Wellness Metrics:</strong> Total entries and progress</div>
+            <div>💡 <strong>Smart Insights:</strong> Automatic pattern recognition</div>
+            <div>🏆 <strong>Milestones:</strong> Celebration of your achievements</div>
+            <div>🧠 <strong>Intelligent Reminders:</strong> Based on your habits and mood</div>
+          </div>
+          <div style={{ 
+            marginTop: 'var(--space-md)', 
+            padding: 'var(--space-md)',
+            background: 'var(--success-100)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--success-800)',
+            fontSize: '0.875rem'
+          }}>
+            🔒 <strong>Privacy:</strong> All tracking happens locally on your device. No data leaves your phone.
           </div>
         </div>
       </div>

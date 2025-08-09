@@ -1,89 +1,86 @@
-:root{ 
-  /* Base Colors */
-  --bg-primary:#fafbfc; 
-  --bg-secondary:#f1f5f9;
-  --bg-glass:rgba(255, 255, 255, 0.25);
-  --text-primary:#0f172a; 
-  --text-secondary:#475569;
-  --text-muted:#64748b; 
+:root{
+  /* Human Psychology-Based Colors - Comfort & Trust */
+  --bg-primary: #faf9f7; /* Warm off-white - reduces eye strain */
+  --bg-secondary: #f5f3f0; /* Soft beige - psychological comfort */
+  --bg-glass: rgba(250, 249, 247, 0.85);
+  --text-primary: #1a1816; /* Much darker for better readability */
+  --text-secondary: #2d2723; /* Darker brown - better contrast */
+  --text-muted: #4a453f; /* Darker muted text - still readable */
   
-  /* Brand Colors */
-  --brand-50:#eff6ff;
-  --brand-100:#dbeafe;
-  --brand-500:#3b82f6;
-  --brand-600:#2563eb;
-  --brand-700:#1d4ed8;
-  --brand-gradient:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --brand-gradient-hover:linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  /* Calming Brand Colors - Psychology of trust & growth */
+  --brand-50: #f0f4f1; /* Soft mint - freshness without overwhelm */
+  --brand-100: #dbe9df; /* Light sage - balance and harmony */
+  --brand-500: #4a6b5a; /* Darker teal - better contrast for text */
+  --brand-600: #3d5847; /* Much darker - excellent readability */
+  --brand-700: #2d4235; /* Very dark - perfect for text on light backgrounds */
+  --brand-gradient: linear-gradient(135deg, #6b9080 0%, #4a6b5a 100%);
+  --brand-gradient-hover: linear-gradient(135deg, #4a6b5a 0%, #6b9080 100%);  /* Warm Surface Colors - Psychological comfort */
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8f6f3; /* Warm white - reduces glare */
+  --surface-glass: rgba(248, 246, 243, 0.8);
+  --surface-elevated: rgba(255, 255, 255, 0.95);
   
-  /* Surface Colors */
-  --surface-primary:#ffffff;
-  --surface-secondary:#f8fafc;
-  --surface-glass:rgba(255, 255, 255, 0.7);
-  --surface-elevated:rgba(255, 255, 255, 0.9);
+  /* Gentle Accent Colors - Emotional wellbeing */
+  --accent-success: #7fb069; /* Soft green - achievement without pressure */
+  --accent-warning: #d4a574; /* Warm amber - caution without alarm */
+  --accent-danger: #c17767; /* Muted terracotta - gentle error indication */
+  --accent-info: #7ba7bc; /* Soft blue - information without overwhelm */
   
-  /* Accent Colors */
-  --accent-success:#10b981;
-  --accent-warning:#f59e0b;
-  --accent-danger:#ef4444;
-  --accent-info:#06b6d4;
+  /* Psychological Shadows - Subtle depth without harshness */
+  --shadow-sm: 0 2px 4px 0 rgba(44, 40, 38, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(44, 40, 38, 0.08), 0 2px 6px -1px rgba(44, 40, 38, 0.05);
+  --shadow-lg: 0 8px 20px -4px rgba(44, 40, 38, 0.1), 0 4px 8px -2px rgba(44, 40, 38, 0.06);
+  --shadow-xl: 0 16px 32px -6px rgba(44, 40, 38, 0.12), 0 6px 12px -3px rgba(44, 40, 38, 0.08);
+  --shadow-glow: 0 0 24px rgba(107, 144, 128, 0.15); /* Soft brand glow */
+  --shadow-color: rgba(107, 144, 128, 0.1);
   
-  /* Effects */
-  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-glow:0 0 20px rgb(102 126 234 / 0.15);
-  --shadow-color:rgb(99 102 241 / 0.15);
+  /* Glass morphism - Gentle & natural */
+  --glass-bg: rgba(250, 249, 247, 0.7);
+  --glass-border: rgba(107, 144, 128, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(44, 40, 38, 0.12);
   
-  /* Glass Effects */
-  --glass-bg:rgba(255, 255, 255, 0.25);
-  --glass-border:rgba(255, 255, 255, 0.18);
-  --glass-shadow:0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  /* Warm Borders - Non-aggressive separation */
+  --border-subtle: #ebe6e0;
+  --border-default: #d6cfc4;
+  --border-strong: #b8ada0;
   
-  /* Borders */
-  --border-subtle:#e2e8f0;
-  --border-default:#cbd5e1;
-  --border-strong:#94a3b8;
+  /* Comfortable Spacing Scale */
+  --space-xs: 0.375rem;
+  --space-sm: 0.625rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
   
-  /* Spacing Scale */
-  --space-xs:0.25rem;
-  --space-sm:0.5rem;
-  --space-md:1rem;
-  --space-lg:1.5rem;
-  --space-xl:2rem;
-  --space-2xl:3rem;
+  /* Readable Typography */
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", "Avenir", "Helvetica Neue", sans-serif;
   
-  /* Typography */
-  --font-mono:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  
-  /* Animations */
-  --ease-out-cubic:cubic-bezier(0.33, 1, 0.68, 1);
-  --ease-in-out-cubic:cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring:cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Gentle Animations */
+  --ease-out-cubic: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-in-out-cubic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 :root[data-theme='dark']{ 
-  --bg-primary:#0f172a; 
-  --bg-secondary:#1e293b;
-  --bg-glass:rgba(15, 23, 42, 0.25);
-  --text-primary:#f1f5f9; 
-  --text-secondary:#cbd5e1;
-  --text-muted:#94a3b8; 
+  /* Psychologically Comfortable Dark Colors - Better contrast */
+  --bg-primary: #1c1917; /* Warm dark brown - less harsh than pure black */
+  --bg-secondary: #292524; /* Warmer dark gray - psychological comfort */
+  --bg-glass: rgba(28, 25, 23, 0.85);
+  --text-primary: #f9f8f6; /* Brighter white - much better contrast */
+  --text-secondary: #e8e5e1; /* Lighter gray - more readable */
+  --text-muted: #c4bfb8; /* Much lighter muted text - clearly visible */
   
-  --surface-primary:#1e293b;
-  --surface-secondary:#334155;
-  --surface-glass:rgba(30, 41, 59, 0.7);
-  --surface-elevated:rgba(30, 41, 59, 0.9);
+  /* Calming Dark Surface Colors */
+  --surface-primary: #292524;
+  --surface-secondary: #3c3835; /* Warm charcoal */
+  --surface-glass: rgba(41, 37, 36, 0.8);
+  --surface-elevated: rgba(41, 37, 36, 0.95);
   
-  --border-subtle:#334155;
-  --border-default:#475569;
-  --border-strong:#64748b;
-  
-  --glass-bg:rgba(30, 41, 59, 0.25);
-  --glass-border:rgba(148, 163, 184, 0.18);
-  --glass-shadow:0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  /* Gentle Dark Borders */
+  --border-subtle: #3c3835;
+  --border-default: #57534e;
+  --border-strong: #78716c;
 }
 *{ 
   box-sizing:border-box; 
@@ -99,11 +96,14 @@ body{
   color:var(--text-primary); 
   background:var(--bg-primary);
   background-image:
-    radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%), 
-    radial-gradient(at 82% 65%, hsl(218.00, 39%, 11%) 0, transparent 55%);
-  line-height:1.6;
+    radial-gradient(at 30% 40%, rgba(107, 144, 128, 0.08) 0%, transparent 50%), 
+    radial-gradient(at 80% 20%, rgba(212, 165, 116, 0.06) 0%, transparent 50%),
+    radial-gradient(at 40% 80%, rgba(123, 167, 188, 0.05) 0%, transparent 50%);
+  line-height:1.7;
+  letter-spacing: 0.005em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   min-height:100vh;
   position:relative;
 }
@@ -736,6 +736,126 @@ input[type="checkbox"]:focus {
 :root[data-hc='1']{ --bg:#ffffff; --text:#000000; --muted:#000000; --brand:#000000; --card:#ffffff; }
 :root[data-hc='1'] .card{ border:2px solid #000; }
 :root[data-rm='1'] *{ transition:none !important; animation:none !important; }
+
+/* Mobile-First Optimizations */
+@media (max-width: 768px) {
+  .section-premium {
+    padding: var(--space-lg) var(--space-md);
+  }
+  
+  .header-premium {
+    padding: var(--space-xl) var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+  
+  .card-premium {
+    margin-bottom: var(--space-lg);
+  }
+  
+  .settings-grid {
+    gap: var(--space-md);
+  }
+  
+  .btn {
+    min-height: 48px; /* Better touch targets */
+    font-size: 1rem;
+  }
+  
+  .mood {
+    min-width: 80px;
+    padding: var(--space-md);
+  }
+  
+  .moodRow {
+    gap: var(--space-sm);
+  }
+  
+  /* Enhanced touch feedback */
+  .btn:active, .mood:active, .setting-toggle:active {
+    transform: scale(0.95);
+  }
+  
+  /* Better mobile form inputs */
+  .input-premium {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--space-lg);
+  }
+  
+  textarea.input-premium {
+    min-height: 120px;
+  }
+}
+
+/* Small mobile screens */
+@media (max-width: 480px) {
+  :root {
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-xxl: 32px;
+  }
+  
+  .header-premium div:first-child {
+    font-size: 2rem; /* Smaller emoji on tiny screens */
+  }
+  
+  .header-premium div:nth-child(2) {
+    font-size: 1.25rem; /* Smaller title */
+  }
+  
+  .moodRow {
+    justify-content: space-between;
+  }
+  
+  .mood {
+    flex: 1;
+    max-width: 70px;
+    font-size: 0.75rem;
+  }
+  
+  .mood div:first-child {
+    font-size: 20px; /* Smaller emojis */
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover, .mood:hover, .setting-toggle:hover, .journal-entry:hover {
+    transform: none; /* Disable hover effects on touch */
+  }
+  
+  .btn:active, .mood:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Larger touch targets */
+  .setting-toggle {
+    min-height: 60px;
+    padding: var(--space-lg);
+  }
+  
+  .toggle-label {
+    padding: var(--space-sm) 0;
+  }
+}
+
+/* Safe area support for mobile notches */
+@supports (padding: max(0px)) {
+  .section-premium {
+    padding-left: max(var(--space-lg), env(safe-area-inset-left));
+    padding-right: max(var(--space-lg), env(safe-area-inset-right));
+    padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom));
+  }
+  
+  .bottomNav {
+    padding-left: max(var(--space-md), env(safe-area-inset-left));
+    padding-right: max(var(--space-md), env(safe-area-inset-right));
+    padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+  }
+}
 
 /* Settings Page Styles */
 .settings-grid {

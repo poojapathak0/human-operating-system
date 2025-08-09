@@ -13,6 +13,12 @@ export default function App() {
     (async () => {
       await autoUnlockFromSession();
       hydrate();
+      
+      // Initialize reminder service if notifications are enabled
+      if (localStorage.getItem('clear.notifications') === '1') {
+        const { reminderService } = await import('../utils/reminders');
+        reminderService.startIntelligentReminders();
+      }
     })();
   }, [hydrate]);
 
