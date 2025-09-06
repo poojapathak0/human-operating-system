@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  // Support GitHub Pages subpath (e.g., /human-operating-system/)
+  base: process.env.BASE_PATH || '/',
   build: {
     rollupOptions: {
       output: {

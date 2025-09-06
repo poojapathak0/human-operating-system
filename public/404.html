@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0;url=/human-operating-system/" />
+    <script>
+      // Redirect to base path preserving path after repo name
+      (function () {
+        var path = location.pathname;
+        var base = '/human-operating-system/';
+        if (!path.startsWith(base)) {
+          var idx = path.indexOf('/human-operating-system/');
+          if (idx >= 0) base = path.substring(idx, idx + '/human-operating-system/'.length);
+        }
+        location.replace(base);
+      })();
+    </script>
+  </head>
+  <body></body>
+  </html>
