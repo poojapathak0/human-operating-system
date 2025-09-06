@@ -3,6 +3,18 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          i18n: ['i18next', 'react-i18next'],
+          db: ['dexie']
+        }
+      }
+    }
+  },
   server: {
     host: '0.0.0.0',
     port: 5173
@@ -53,15 +65,18 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['index.html','assets/index-*.css','assets/index-*.js','manifest.webmanifest','favicon.svg','pwa-192x192.png','pwa-512x512.png','pwa-512x512-maskable.png'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
+            urlPattern: ({ request }) => request.destination === 'script' || request.destination === 'style',
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'assets' }
           },
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: { cacheName: 'images', expiration: { maxEntries: 50 } }
+          }
         ],
       },
       devOptions: {

@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useAppStore } from '../store/appStore';
 import type { JournalEntry } from '../store/appStore';
 import { useI18n } from '../utils/i18n';
 import { hasKey, unlock, lock } from '../utils/cryptoKey';
+import { addJournalEntry as addJournalSvc, readJournalEntry, listJournalEntries } from '../modules/vault';
 
 export default function Vault() {
   const t = useI18n();
-  const addJournal = useAppStore((s) => s.addJournal);
-  const journals = useAppStore((s) => s.journals);
-  const getDecryptedJournalText = useAppStore((s) => s.getDecryptedJournalText);
+  const [journals, setJournals] = useState<JournalEntry[]>([]);
   const [text, setText] = useState('');
   const [unlocked, setUnlocked] = useState(hasKey());
   const [plainTexts, setPlainTexts] = useState<Record<string, string>>({});
@@ -17,17 +15,19 @@ export default function Vault() {
   useEffect(() => {
     if (!unlocked) return;
     (async () => {
+      const js = await listJournalEntries();
+      setJournals(js);
       const map: Record<string, string> = {};
-      for (const j of journals) {
+      for (const j of js) {
         try {
-          map[j.id] = await getDecryptedJournalText(j);
+          map[j.id] = await readJournalEntry(j);
         } catch {
           map[j.id] = t('vault.locked');
         }
       }
       setPlainTexts(map);
     })();
-  }, [journals, unlocked, getDecryptedJournalText, t]);
+  }, [unlocked, t]);
 
   return (
     <section className="section-premium">
@@ -120,11 +120,12 @@ export default function Vault() {
 
       <div className="card card-premium">
         <div className="form-section">
-          <label className="label-premium">
+          <label className="label-premium" htmlFor="vault-new-entry">
             New Journal Entry
           </label>
           <textarea
             className="input-premium"
+            id="vault-new-entry"
             placeholder={t('vault.placeholder')}
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -142,7 +143,9 @@ export default function Vault() {
             disabled={!unlocked}
             onClick={async () => {
               if (!text.trim()) return;
-              await addJournal({ text, createdAt: Date.now() });
+              await addJournalSvc(text, Date.now());
+              const js = await listJournalEntries();
+              setJournals(js);
               setText('');
             }}
             style={{ 
@@ -194,7 +197,7 @@ export default function Vault() {
         </div>
       </div>
 
-      {journals.length > 0 && (
+  {journals.length > 0 && (
         <div className="card card-premium">
           <h3 style={{
             fontSize: '1.25rem',

@@ -1,0 +1,29 @@
+{
+  "common": { "save": "Save" },
+  "mood": { "sad": "Sad", "tired": "Tired", "neutral": "Neutral", "calm": "Calm", "happy": "Happy" },
+  "checkin": {
+    "title": "Daily Clarity Check-In",
+    "how_are_you": "How are you feeling?",
+    "top_priority": "What's your top priority today?",
+    "note_placeholder": "Write a short note…"
+  },
+  "timeline": { "title": "Life Reflection Timeline" },
+  "compass": {
+    "title": "Decision Compass",
+    "question": "What decision are you exploring?",
+    "values": "Core values (comma-separated)",
+    "values_ph": "e.g., honesty, family, growth",
+    "options": "Options (one per line)",
+    "options_ph": "List possible options…"
+  },
+  "vault": {
+    "title": "Inner Vault",
+    "placeholder": "Private journal entry…",
+    "unlock": "Unlock with passphrase",
+    "lock": "Lock",
+    "unlocked": "Unlocked",
+    "enter_passphrase": "Enter your passphrase",
+    "locked": "Locked — unlock to view",
+    "loading": "Decrypting…"
+  }
+}

@@ -5,7 +5,7 @@ import { setPassphrase, unlock, lock, hasKey, setSessionPassphrase } from '../ut
 import { exportEncryptedWithKey, importEncryptedWithKey } from '../db/db';
 
 export default function Settings() {
-  const t = useI18n();
+  const _t = useI18n();
   const [unlocked, setUnlocked] = useState(hasKey());
   const [lang, setLang] = useState<'en' | 'hi' | 'es'>((localStorage.getItem('clear.lng') as any) || 'en');
   const [largeText, setLargeText] = useState(localStorage.getItem('clear.textLg') === '1');
@@ -14,6 +14,8 @@ export default function Settings() {
   const [dark, setDark] = useState(localStorage.getItem('clear.theme') === 'dark');
   const [speech, setSpeech] = useState(localStorage.getItem('clear.speech') === '1');
   const [notifications, setNotifications] = useState(localStorage.getItem('clear.notifications') === '1');
+  const [localML, setLocalML] = useState(localStorage.getItem('clear.localML') === '1');
+  const [mlExplain, setMlExplain] = useState(localStorage.getItem('clear.mlExplain') === '1');
   const [showPassModal, setShowPassModal] = useState<'set' | 'unlock' | null>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const passConfirmRef = useRef<HTMLInputElement>(null);
@@ -192,6 +194,28 @@ export default function Settings() {
         </h3>
         
         <div className="settings-grid">
+          <div className="setting-toggle">
+            <input
+              id="local-ml"
+              type="checkbox"
+              checked={localML}
+              onChange={async (e) => {
+                const v = e.target.checked;
+                setLocalML(v);
+                localStorage.setItem('clear.localML', v ? '1' : '0');
+                if (v) {
+                  // Run a refresh now (on-device only)
+                  const { refreshDailyInsight } = await import('../modules/ml/service');
+                  await refreshDailyInsight();
+                }
+              }}
+              style={{ accentColor: 'var(--brand-500)' }}
+            />
+            <label htmlFor="local-ml" className="toggle-label">
+              <span>Local insights (on-device)</span>
+              <small>Private predictions; data never leaves your device</small>
+            </label>
+          </div>
           <div className="setting-item">
             <label className="label-premium">🌍 Language</label>
             <select
@@ -207,6 +231,8 @@ export default function Settings() {
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
               <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="ar">العربية</option>
             </select>
           </div>
 
@@ -350,6 +376,21 @@ export default function Settings() {
         }}>
           📊 Tracking & Insights
         </h3>
+        <div className="setting-toggle" style={{ marginBottom: 'var(--space-md)' }}>
+          <input
+            id="ml-explain"
+            type="checkbox"
+            checked={mlExplain}
+            onChange={(e) => {
+              const v = e.target.checked; setMlExplain(v); localStorage.setItem('clear.mlExplain', v ? '1' : '0');
+            }}
+            style={{ accentColor: 'var(--brand-500)' }}
+          />
+          <label htmlFor="ml-explain" className="toggle-label">
+            <span>🧠 Explain factors</span>
+            <small>Show the list of contributing factors in Insights</small>
+          </label>
+        </div>
         <div style={{
           padding: 'var(--space-lg)',
           background: 'var(--info-100)',

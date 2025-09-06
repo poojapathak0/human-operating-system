@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { useAppStore } from '../store/appStore';
+import { addCheckIn as addCheckInSvc } from '../modules/checkin';
 import { useI18n } from '../utils/i18n';
 
 export default function CheckIn() {
   const t = useI18n();
-  const addCheckIn = useAppStore((s) => s.addCheckIn);
+  const addCheckIn = async (args: any) => { await addCheckInSvc(args); };
   const [mood, setMood] = useState<string>('neutral');
   const [notes, setNotes] = useState('');
   const rec = useRef<any>(null);
@@ -64,7 +64,7 @@ export default function CheckIn() {
 
       <div className="card card-premium">
         <div style={{ marginBottom: 'var(--space-lg)' }}>
-          <label style={{ 
+          <label id="mood-label" style={{ 
             fontSize: '1.25rem', 
             fontWeight: '600', 
             display: 'block', 
@@ -75,12 +75,14 @@ export default function CheckIn() {
           }}>
             {t('checkin.how_are_you')}
           </label>
-          <div className="moodRow">
+          <div className="moodRow" role="radiogroup" aria-labelledby="mood-label">
             {['sad', 'tired', 'neutral', 'calm', 'happy'].map((m) => (
               <button
                 key={m}
                 className={mood === m ? 'mood active' : 'mood'}
                 onClick={() => setMood(m)}
+                role="radio"
+                aria-checked={mood === m}
                 style={{
                   background: mood === m ? 'var(--brand-gradient)' : 'var(--surface-glass)',
                   transform: mood === m ? 'translateY(-6px) scale(1.05)' : undefined
@@ -92,7 +94,7 @@ export default function CheckIn() {
             ))}
           </div>
         </div>
-        <label style={{ 
+    <label htmlFor="checkin-note" style={{ 
           fontSize: '1.1rem', 
           fontWeight: '600', 
           display: 'block', 
@@ -103,6 +105,7 @@ export default function CheckIn() {
         </label>
         <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center' }}>
           <textarea
+      id="checkin-note"
             placeholder={t('checkin.note_placeholder')}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
@@ -120,6 +123,7 @@ export default function CheckIn() {
               type="button"
               className="btn btn-secondary btn-icon"
               aria-pressed={recOn}
+              aria-label={recOn ? 'Stop voice input' : 'Start voice input'}
               onClick={toggleRec}
               style={{
                 minWidth: '60px',

@@ -4,10 +4,13 @@ import { useAppStore } from '../store/appStore';
 import { setLanguage } from '../utils/i18n';
 import { autoUnlockFromSession } from '../utils/cryptoKey';
 import Onboarding from '../components/Onboarding';
+import { useState } from 'react';
+import PWAUpdate from '../components/PWAUpdate';
 
 export default function App() {
   const { pathname } = useLocation();
   const hydrate = useAppStore((s) => s.hydrateFromDb);
+  const [insight, setInsight] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -18,6 +21,20 @@ export default function App() {
       if (localStorage.getItem('clear.notifications') === '1') {
         const { reminderService } = await import('../utils/reminders');
         reminderService.startIntelligentReminders();
+      }
+      // kick off local ML refresh (non-blocking)
+      if (localStorage.getItem('clear.localML') === '1') {
+        import('../modules/ml/service').then(async ({ refreshDailyInsight, loadLatestInsight }) => {
+          const res = await refreshDailyInsight();
+          if (res.message) setInsight(res.message);
+          // also listen for future updates during session
+          window.addEventListener('clear:mlInsightUpdated', (e: any) => {
+            const payload = e?.detail; if (payload?.message) setInsight(payload.message);
+          });
+          // if nothing yet, show last stored message if exists
+          const last = loadLatestInsight();
+          if (!res.message && last?.message) setInsight(last.message);
+        }).catch(()=>{});
       }
     })();
   }, [hydrate]);
@@ -42,6 +59,9 @@ export default function App() {
           <Link to="/timeline" className={pathname === '/timeline' ? 'active' : ''}>Timeline</Link>
           <Link to="/compass" className={pathname === '/compass' ? 'active' : ''}>Compass</Link>
           <Link to="/insights" className={pathname === '/insights' ? 'active' : ''}>Insights</Link>
+          <Link to="/mindmap" className={pathname === '/mindmap' ? 'active' : ''}>Mind Map</Link>
+          <Link to="/assistant" className={pathname === '/assistant' ? 'active' : ''}>Assistant</Link>
+          <Link to="/planner" className={pathname === '/planner' ? 'active' : ''}>Planner</Link>
           <Link to="/sync" className={pathname === '/sync' ? 'active' : ''}>Sync</Link>
           <Link to="/safety" className={pathname === '/safety' ? 'active' : ''}>Safety</Link>
           <Link to="/vault" className={pathname === '/vault' ? 'active' : ''}>Vault</Link>
@@ -59,11 +79,18 @@ export default function App() {
       </header>
       <main>
         <Onboarding />
+        {insight && (
+          <div className="card" role="status" aria-live="polite" style={{ marginTop: 0 }}>
+            <strong>Gentle insight</strong>
+            <div style={{ marginTop: 6 }}>{insight}</div>
+          </div>
+        )}
         <Outlet />
       </main>
       <footer className="appFooter">
         <small>Privacy-first. Offline. No ads.</small>
       </footer>
+  <PWAUpdate />
     </div>
   );
 }

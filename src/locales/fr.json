@@ -1,0 +1,29 @@
+{
+  "common": { "save": "Enregistrer" },
+  "mood": { "sad": "Triste", "tired": "Fatigué", "neutral": "Neutre", "calm": "Calme", "happy": "Heureux" },
+  "checkin": {
+    "title": "Bilan de clarté quotidien",
+    "how_are_you": "Comment vous sentez-vous ?",
+    "top_priority": "Quelle est votre priorité aujourd'hui ?",
+    "note_placeholder": "Écrivez une courte note…"
+  },
+  "timeline": { "title": "Chronologie de réflexion" },
+  "compass": {
+    "title": "Boussole de décision",
+    "question": "Quelle décision explorez-vous ?",
+    "values": "Valeurs (séparées par des virgules)",
+    "values_ph": "ex. honnêteté, famille, croissance",
+    "options": "Options (une par ligne)",
+    "options_ph": "Listez les options possibles…"
+  },
+  "vault": {
+    "title": "Coffre intérieur",
+    "placeholder": "Entrée de journal privée…",
+    "unlock": "Déverrouiller avec phrase secrète",
+    "lock": "Verrouiller",
+    "unlocked": "Déverrouillé",
+    "enter_passphrase": "Entrez votre phrase secrète",
+    "locked": "Verrouillé — déverrouillez pour voir",
+    "loading": "Déchiffrement…"
+  }
+}

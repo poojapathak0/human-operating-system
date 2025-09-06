@@ -6,6 +6,10 @@ export default defineConfig({
   test: {
   globals: true,
     environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts']
+    setupFiles: ['./vitest.setup.ts'],
+  exclude: ['tests/**', 'node_modules/**'],
+    alias: {
+      'virtual:pwa-register': '/src/__mocks__/virtual:pwa-register.ts'
+    }
   }
 });

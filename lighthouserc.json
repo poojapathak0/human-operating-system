@@ -1,0 +1,18 @@
+{
+  "ci": {
+    "collect": {
+      "url": ["http://localhost:5173/"],
+      "startServerCommand": "vite",
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["warn", { "minScore": 0.7 }],
+        "categories:pwa": ["error", { "minScore": 0.9 }]
+      }
+    }
+  }
+}

@@ -5,12 +5,12 @@ export interface Reminder {
   type: 'checkin' | 'reflection' | 'wellness';
   title: string;
   message: string;
-  scheduledFor: number;
-  isRecurring: boolean;
+  scheduledFor?: number;
+  isRecurring?: boolean;
   recurringDays?: number[]; // 0=Sunday, 1=Monday, etc.
   recurringTime?: string; // "09:00"
-  isActive: boolean;
-  createdAt: number;
+  isActive?: boolean;
+  createdAt?: number;
 }
 
 class ReminderService {
@@ -132,11 +132,7 @@ class ReminderService {
       icon: '/pwa-192x192.png',
       badge: '/favicon.svg',
       tag: reminder.id,
-      requireInteraction: false,
-      actions: [
-        { action: 'open', title: 'Open Clear' },
-        { action: 'snooze', title: 'Remind me later' }
-      ]
+      requireInteraction: false
     });
 
     notification.onclick = () => {

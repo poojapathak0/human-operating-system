@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dev-dist/
+.vite/
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/
+
+# Local env/config
+.env
+.env.*
+*.local
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Backups exported by the app
+clear-backup-*.txt
+
+# Logs
+*.log
